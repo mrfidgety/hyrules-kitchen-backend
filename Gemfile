@@ -35,6 +35,7 @@ end
 group :development do
   gem 'annotate'
   gem 'listen', '~> 3.2'
+  gem 'overcommit'
   gem 'rubocop', require: false
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
