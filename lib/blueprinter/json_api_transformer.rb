@@ -1,4 +1,4 @@
-module Transformers
+module Blueprinter
   class JsonApiTransformer < Blueprinter::Transformer
     def transform(hash, object, _options)
       hash.merge!(
