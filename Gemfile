@@ -25,20 +25,30 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
+# Serialize objects
+gem 'blueprinter'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  # Pause code execution to help debug
   gem 'pry', '~> 0.12.2'
+  # Test suite
   gem 'rspec-rails'
 end
 
 group :development do
+  # Apply comment to models showing database table structure
   gem 'annotate'
+  # Listen to file changes
   gem 'listen', '~> 3.2'
+  # Perform additional checks when committing code
   gem 'overcommit'
+  # Enforce ruby best practices
   gem 'rubocop', require: false
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  # Make Spring watch the filesystem for changes using Listen
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 

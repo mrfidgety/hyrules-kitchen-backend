@@ -60,6 +60,7 @@ GEM
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.1)
+    blueprinter (0.25.1)
     bootsnap (1.4.7)
       msgpack (~> 1.0)
     builder (3.2.4)
@@ -198,6 +199,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
+  blueprinter
   bootsnap (>= 1.4.2)
   byebug
   listen (~> 3.2)
