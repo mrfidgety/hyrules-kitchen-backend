@@ -24,5 +24,5 @@
 class IngredientSerializer < Blueprinter::Base
   identifier :id
 
-  fields :name, :value
+  fields :base_hearts, :category, :effect_potency, :name, :time_bonus, :value
 end
