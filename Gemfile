@@ -35,6 +35,8 @@ group :development, :test do
   gem 'pry', '~> 0.12.2'
   # Test suite
   gem 'rspec-rails'
+  # Check number of sql queries
+  gem 'rspec-sqlimit'
 end
 
 group :development do

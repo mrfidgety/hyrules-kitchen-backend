@@ -21,8 +21,11 @@
 #
 #  fk_rails_...  (effect_id => effects.id)
 #
+
 class IngredientSerializer < Blueprinter::Base
   identifier :id
 
   fields :base_hearts, :category, :effect_potency, :name, :time_bonus, :value
+
+  association :effect
 end

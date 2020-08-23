@@ -11,7 +11,26 @@ RSpec::Matchers.define :render_primary_resources do |_expected|
   end
 
   def actual_resource_ids
-    @actual_resource_ids ||= parse_json(actual.body, struct: true).data.map(&:id)
+    @actual_resource_ids ||= parse_json(actual.body, struct: true).data&.map(&:id)
+  end
+
+  def expected_ids
+    expected.map(&:id)
+  end
+end
+
+RSpec::Matchers.define :render_included_resources do |_expected|
+  match do |_actual|
+    expect(actual_resource_ids).to match_array expected_ids
+  end
+
+  failure_message do |_actual|
+    "expected included resources with ids \"#{expected_ids}\", " \
+      "got \"#{actual_resource_ids}\""
+  end
+
+  def actual_resource_ids
+    @actual_resource_ids ||= parse_json(actual.body, struct: true).included&.map(&:id)
   end
 
   def expected_ids
@@ -32,6 +51,25 @@ RSpec::Matchers.define :render_primary_resource do |_expected|
 
   def actual_resource
     @actual_resource ||= parse_json(actual.body, struct: true).data
+  end
+end
+
+RSpec::Matchers.define :render_included_resource do |_expected|
+  match do |_actual|
+    return false unless included_resources.present?
+
+    included_resources.any? do |resource|
+      resource.id == expected.id && resource.type == expected.class.name.tableize
+    end
+  end
+
+  failure_message do |_actual|
+    "expected included resource of type '#{expected.class.name.tableize}' with id "\
+    "'#{expected.id}', got #{included_resources}"
+  end
+
+  def included_resources
+    @included_resources ||= parse_json(actual.body, struct: true).included
   end
 end
 
