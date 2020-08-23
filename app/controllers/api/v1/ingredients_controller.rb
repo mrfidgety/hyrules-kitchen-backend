@@ -4,19 +4,21 @@ module Api
       enable_inclusions_for index: [:effect], show: [:effect]
 
       def index
-        render json: {
+        base_response = {
           data: serialized_ingredients,
-          included: serialized_effects,
           links: { self: api_v1_ingredients_url }
         }
+
+        render json: base_response.merge(serialized_inclusions)
       end
 
       def show
-        render json: {
+        base_response = {
           data: serialized_ingredient,
-          included: serialized_effect,
           links: { self: api_v1_ingredient_url(ingredient) }
         }
+
+        render json: base_response.merge(serialized_inclusions)
       end
 
       private
@@ -33,16 +35,18 @@ module Api
         Ingredient.find(params[:id])
       end
 
+      def serialized_inclusions
+        return {} unless inclusions.any?
+
+        { included: serialized_effects }
+      end
+
       def serialized_effects
         return unless inclusions.include?('effect')
 
-        EffectSerializer.render_as_json(Effect.all, view: :basic)
-      end
+        effects = action_name == 'show' ? [ingredient.effect] : Effect.all
 
-      def serialized_effect
-        return unless inclusions.include?('effect')
-
-        [EffectSerializer.render_as_json(ingredient.effect, view: :basic)]
+        EffectSerializer.render_as_json(effects, view: :basic)
       end
     end
   end
