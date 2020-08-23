@@ -21,7 +21,7 @@ module Api
       end
 
       def action_permits_inclusions?
-        actions_permitting_included_resources.include?(params[:action])
+        respond_to?("permitted_#{params[:action]}_inclusions")
       end
 
       def inclusions
@@ -41,12 +41,6 @@ module Api
 
     class_methods do
       def enable_inclusions_for(actions = {})
-        define_method('actions_permitting_included_resources') { actions.keys.map(&:to_s) }
-
-        define_action_specific_inclusions(actions)
-      end
-
-      def define_action_specific_inclusions(actions)
         actions.each do |action, fields|
           define_method("permitted_#{action}_inclusions") { fields.map(&:to_s) }
         end

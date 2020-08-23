@@ -5,11 +5,11 @@ Blueprinter.configure do |config|
   config.default_transformers = [Blueprinter::JsonApiTransformer]
 end
 
+# Modify the default association behaviour to use a custom extractor
+# to produce JSONAPI relationships
 module Blueprinter
   class Base
     def self.association(method, options = {}, &block)
-      # Blueprinter validation removed since our custom extractor does not require one
-
       field(
         method,
         options.merge(
