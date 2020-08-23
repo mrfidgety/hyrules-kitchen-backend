@@ -34,11 +34,15 @@ module Api
       end
 
       def serialized_effects
-        EffectSerializer.render_as_json(Effect.all) if inclusions.include?('effect')
+        return unless inclusions.include?('effect')
+
+        EffectSerializer.render_as_json(Effect.all, view: :basic)
       end
 
       def serialized_effect
-        [EffectSerializer.render_as_json(ingredient.effect)] if inclusions.include?('effect')
+        return unless inclusions.include?('effect')
+
+        [EffectSerializer.render_as_json(ingredient.effect, view: :basic)]
       end
     end
   end

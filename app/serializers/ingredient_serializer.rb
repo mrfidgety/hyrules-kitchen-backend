@@ -28,4 +28,8 @@ class IngredientSerializer < Blueprinter::Base
   fields :base_hearts, :category, :effect_potency, :name, :time_bonus, :value
 
   association :effect
+
+  view :basic do
+    exclude :effect
+  end
 end

@@ -1,8 +1,7 @@
 module Blueprinter
   class JsonApiTransformer < Blueprinter::Transformer
     def transform(hash, object, _options)
-      relationship_keys = hash.select { |_key, value| value.is_a?(Hash) }.keys
-      relationships_hash = hash.extract!(*relationship_keys)
+      relationships_hash = hash.extract!(*object.class.reflect_on_all_associations.map(&:name))
 
       hash.merge!(
         type: object.class.name.tableize,

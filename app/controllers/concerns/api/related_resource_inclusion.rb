@@ -21,7 +21,7 @@ module Api
       end
 
       def action_permits_inclusions?
-        respond_to?("permitted_#{params[:action]}_inclusions")
+        respond_to?("permitted_#{action_name}_inclusions")
       end
 
       def inclusions
@@ -35,7 +35,7 @@ module Api
       end
 
       def permitted_inclusions_for_action
-        public_send("permitted_#{params[:action]}_inclusions")
+        public_send("permitted_#{action_name}_inclusions")
       end
     end
 
