@@ -11,11 +11,9 @@
 #
 #  index_recipes_on_ingredients_key  (ingredients_key) UNIQUE
 #
-class Recipe < ApplicationRecord
-  has_many :recipe_ingredients
-  has_many :ingredients, through: :recipe_ingredients
 
-  def self.generate_key(ingredients)
-    ingredients.map(&:id).sort.join('-')
-  end
+class RecipeSerializer < Blueprinter::Base
+  identifier :id
+
+  association :ingredients
 end
