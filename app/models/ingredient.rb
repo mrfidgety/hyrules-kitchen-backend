@@ -22,17 +22,19 @@
 #  fk_rails_...  (effect_id => effects.id)
 #
 class Ingredient < ApplicationRecord
+  has_many :recipe_ingredients
+  has_many :recipes, through: :recipe_ingredients
   belongs_to :effect, optional: true
 
   enum category: {
-                    food: 'food',
-                    seasoning: 'seasoning',
-                    critter: 'critter',
-                    monster_part: 'monster_part',
-                    dragon_part: 'dragon_part',
-                    ore: 'ore',
-                    special: 'special'
-                  }
+    food: 'food',
+    seasoning: 'seasoning',
+    critter: 'critter',
+    monster_part: 'monster_part',
+    dragon_part: 'dragon_part',
+    ore: 'ore',
+    special: 'special'
+  }
 
   SEASONINGS_REQUIRING_OTHER_INGREDIENTS = [
     'Cane Sugar',
@@ -42,6 +44,8 @@ class Ingredient < ApplicationRecord
     'Rock Salt',
     'Tabantha Wheat'
   ].freeze
+
+  public_constant :SEASONINGS_REQUIRING_OTHER_INGREDIENTS
 
   def parameterized_name
     name.gsub("'", '').parameterize.underscore
