@@ -71,22 +71,22 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       expect(response).to have_top_level_links(self: "/recipes/#{recipe.id}")
     end
 
-    it 'executes two queries' do
-      expect { get_recipe }.not_to exceed_query_limit(2)
+    it 'executes three queries' do
+      expect { get_recipe }.not_to exceed_query_limit(3)
     end
 
-    # describe 'resource inclusion' do
-    #   let(:params) { { include: 'dishes' } }
+    describe 'resource inclusion' do
+      let(:params) { { include: 'ingredients' } }
 
-    #   it 'can return the associated dishes' do
-    #     get_recipe
+      it 'can return the associated ingredients' do
+        get_recipe
 
-    #     expect(response).to render_included_resource recipe.dishes
-    #   end
+        expect(response).to render_included_resources ingredients
+      end
 
-    #   it 'executes two queries' do
-    #     expect { get_recipe }.not_to exceed_query_limit(2)
-    #   end
-    # end
+      it 'executes three queries' do
+        expect { get_recipe }.not_to exceed_query_limit(3)
+      end
+    end
   end
 end
