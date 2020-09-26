@@ -24,6 +24,18 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: dish_category; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.dish_category AS ENUM (
+    'rock_hard_food',
+    'dubious_food',
+    'elixir',
+    'food'
+);
+
+
+--
 -- Name: effect_outcome; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -90,7 +102,9 @@ CREATE TABLE public.dishes (
     effect_potency numeric(4,2),
     duration integer DEFAULT 0,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    equivalence_key text,
+    category public.dish_category
 );
 
 
@@ -248,6 +262,13 @@ CREATE INDEX index_dishes_on_effect_id ON public.dishes USING btree (effect_id);
 
 
 --
+-- Name: index_dishes_on_equivalence_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dishes_on_equivalence_key ON public.dishes USING btree (equivalence_key);
+
+
+--
 -- Name: index_ingredients_on_effect_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -338,6 +359,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200828023831'),
 ('20200829110658'),
 ('20200925232259'),
-('20200926055720');
+('20200926055720'),
+('20200926072857'),
+('20200926073148');
 
 
