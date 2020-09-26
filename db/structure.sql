@@ -66,6 +66,35 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: dish_recipes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dish_recipes (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    dish_id uuid NOT NULL,
+    recipe_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dishes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dishes (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    hearts numeric(4,2) DEFAULT 0.0,
+    value integer DEFAULT 0,
+    effect_id uuid,
+    effect_potency numeric(4,2),
+    duration integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: effects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -142,6 +171,22 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: dish_recipes dish_recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dish_recipes
+    ADD CONSTRAINT dish_recipes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dishes dishes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dishes
+    ADD CONSTRAINT dishes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: effects effects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -182,6 +227,27 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: index_dish_recipes_on_dish_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dish_recipes_on_dish_id ON public.dish_recipes USING btree (dish_id);
+
+
+--
+-- Name: index_dish_recipes_on_recipe_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dish_recipes_on_recipe_id ON public.dish_recipes USING btree (recipe_id);
+
+
+--
+-- Name: index_dishes_on_effect_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dishes_on_effect_id ON public.dishes USING btree (effect_id);
+
+
+--
 -- Name: index_ingredients_on_effect_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -210,6 +276,14 @@ CREATE UNIQUE INDEX index_recipes_on_ingredients_key ON public.recipes USING btr
 
 
 --
+-- Name: dishes fk_rails_08c1ec3d6e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dishes
+    ADD CONSTRAINT fk_rails_08c1ec3d6e FOREIGN KEY (effect_id) REFERENCES public.effects(id);
+
+
+--
 -- Name: recipe_ingredients fk_rails_176a228c1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -226,11 +300,27 @@ ALTER TABLE ONLY public.recipe_ingredients
 
 
 --
+-- Name: dish_recipes fk_rails_2a5343cb13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dish_recipes
+    ADD CONSTRAINT fk_rails_2a5343cb13 FOREIGN KEY (dish_id) REFERENCES public.dishes(id);
+
+
+--
 -- Name: ingredients fk_rails_38d2fbcefc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ingredients
     ADD CONSTRAINT fk_rails_38d2fbcefc FOREIGN KEY (effect_id) REFERENCES public.effects(id);
+
+
+--
+-- Name: dish_recipes fk_rails_bba56b8ed1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dish_recipes
+    ADD CONSTRAINT fk_rails_bba56b8ed1 FOREIGN KEY (recipe_id) REFERENCES public.recipes(id);
 
 
 --
@@ -246,6 +336,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200809012011'),
 ('20200809012349'),
 ('20200828023831'),
-('20200829110658');
+('20200829110658'),
+('20200925232259'),
+('20200926055720');
 
 

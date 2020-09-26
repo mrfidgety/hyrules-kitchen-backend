@@ -14,6 +14,7 @@
 class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
+  has_many :dishes, through: :dish_recipes
 
   def self.generate_key(ingredients)
     ingredients.map(&:id).sort.join('-')
