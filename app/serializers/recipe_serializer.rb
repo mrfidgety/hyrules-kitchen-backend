@@ -16,4 +16,5 @@ class RecipeSerializer < Blueprinter::Base
   identifier :id
 
   association :ingredients
+  association :dishes
 end

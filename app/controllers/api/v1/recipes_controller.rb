@@ -1,7 +1,7 @@
 module Api
   module V1
     class RecipesController < ApiController
-      enable_inclusions_for show: [:ingredients]
+      enable_inclusions_for show: [:ingredients, :dishes]
 
       def create
         find_or_create_recipe
@@ -35,7 +35,7 @@ module Api
       end
 
       def find_recipe
-        @recipe = Recipe.includes(:ingredients).find(params[:id])
+        @recipe = Recipe.includes(:ingredients, :dishes).find(params[:id])
       end
 
       def serialized_recipe
@@ -63,13 +63,19 @@ module Api
       def serialized_inclusions
         return {} unless inclusions.any?
 
-        { included: serialized_ingredients }
+        { included: serialized_ingredients + serialized_dishes }
       end
 
       def serialized_ingredients
-        return unless inclusions.include?('ingredients')
+        return [] unless inclusions.include?('ingredients')
 
         IngredientSerializer.render_as_json(recipe.ingredients, view: :basic)
+      end
+
+      def serialized_dishes
+        return [] unless inclusions.include?('dishes')
+
+        DishSerializer.render_as_json(recipe.dishes)
       end
     end
   end

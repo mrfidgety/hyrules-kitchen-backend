@@ -19,8 +19,11 @@
 #
 #  fk_rails_...  (effect_id => effects.id)
 #
-class Dish < ApplicationRecord
-  has_many :dish_recipes
-  has_many :recipes, through: :dish_recipes
-  belongs_to :effect, optional: true
+
+class DishSerializer < Blueprinter::Base
+  identifier :id
+
+  fields :duration, :effect_potency, :hearts, :value
+
+  association :effect
 end

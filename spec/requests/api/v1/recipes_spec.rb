@@ -34,7 +34,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
     end
 
     it 'executes a limited number of queries' do
-      expect { post_recipe }.not_to exceed_query_limit(ingredients.length + 5)
+      expect { post_recipe }.not_to exceed_query_limit(ingredients.length + 6)
     end
 
     context 'recipe already exists' do
@@ -71,21 +71,49 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       expect(response).to have_top_level_links(self: "/recipes/#{recipe.id}")
     end
 
-    it 'executes three queries' do
-      expect { get_recipe }.not_to exceed_query_limit(3)
+    it 'executes four queries' do
+      expect { get_recipe }.not_to exceed_query_limit(4)
     end
 
     describe 'resource inclusion' do
-      let(:params) { { include: 'ingredients' } }
+      context 'ingredients' do
+        let(:params) { { include: 'ingredients' } }
 
-      it 'can return the associated ingredients' do
-        get_recipe
+        it 'can return the associated ingredients' do
+          get_recipe
 
-        expect(response).to render_included_resources ingredients
+          expect(response).to render_included_resources ingredients
+        end
+
+        it 'executes four queries' do
+          expect { get_recipe }.not_to exceed_query_limit(4)
+        end
       end
 
-      it 'executes three queries' do
-        expect { get_recipe }.not_to exceed_query_limit(3)
+      context 'dishes' do
+        let(:params) { { include: 'dishes' } }
+
+        let!(:dishes) do
+          [
+            Dish.create(
+              recipes: [recipe],
+              hearts: 2,
+              value: 10,
+              effect: Effect.first,
+              effect_potency: 1
+            )
+          ]
+        end
+
+        it 'can return the associated dishes' do
+          get_recipe
+
+          expect(response).to render_included_resources dishes
+        end
+
+        it 'executes five queries' do
+          expect { get_recipe }.not_to exceed_query_limit(5)
+        end
       end
     end
   end

@@ -14,12 +14,13 @@
 
 class Effect < ApplicationRecord
   has_many :ingredients
+  has_many :dishes
 
   enum outcome: {
-                  buff: 'buff',
-                  additive: 'additive',
-                  restorative: 'restorative'
-                }
+    buff: 'buff',
+    additive: 'additive',
+    restorative: 'restorative'
+  }
 
   def calculate_potency_level(potency_value)
     potency_level = potency_thresholds.reject { |t| potency_value < t }.length
