@@ -27,11 +27,18 @@ class Dish < ApplicationRecord
   has_many :recipes, through: :dish_recipes
   belongs_to :effect, optional: true
 
-  def generate_key(attributes)
+  enum category: {
+    rock_hard_food: 'rock_hard_food',
+    dubious_food: 'dubious_food',
+    elixir: 'elixir',
+    food: 'food'
+  }
+
+  def self.generate_key(attributes)
     [
       attributes[:hearts],
       attributes[:value],
-      attributes[:effect_id] || attributes[:effect].id,
+      attributes[:effect_id] || attributes[:effect]&.id,
       attributes[:effect_potency],
       attributes[:duration]
     ].join('-')
