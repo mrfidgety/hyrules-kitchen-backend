@@ -4,7 +4,7 @@ module Api
       enable_inclusions_for show: [:ingredients, :dishes]
 
       def create
-        find_or_create_recipe
+        create_recipe
 
         base_response = {
           data: serialized_recipe,
@@ -29,9 +29,8 @@ module Api
 
       attr_reader :recipe
 
-      def find_or_create_recipe
-        @recipe = Recipe.find_by(ingredients_key: ingredients_key) ||
-                  Recipe.create(ingredients: ingredients, ingredients_key: ingredients_key)
+      def create_recipe
+        @recipe = CreateRecipe.perform(ingredients: ingredients).recipe
       end
 
       def find_recipe
@@ -40,10 +39,6 @@ module Api
 
       def serialized_recipe
         RecipeSerializer.render_as_json(recipe)
-      end
-
-      def ingredients_key
-        @ingredients_key ||= Recipe.generate_key(ingredients)
       end
 
       def ingredient_ids
