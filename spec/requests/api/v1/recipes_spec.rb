@@ -34,7 +34,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
     end
 
     it 'executes a limited number of queries' do
-      expect { post_recipe }.not_to exceed_query_limit(ingredients.length + 6)
+      expect { post_recipe }.not_to exceed_query_limit(16)
     end
 
     context 'recipe already exists' do
@@ -47,6 +47,10 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
         expect(response).to have_http_status :created
         expect(response).to render_primary_resource existing_recipe
+      end
+
+      it 'executes a limited number of queries' do
+        expect { post_recipe }.not_to exceed_query_limit(4)
       end
     end
   end
