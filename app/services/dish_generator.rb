@@ -9,6 +9,7 @@ class DishGenerator
   # of each ingredient, then multiply by a number based on
   # how many ingredients are in the dish (1 - 5)
   VALUE_MULTIPLIER = [1.5, 1.8, 2.1, 2.4, 2.8].freeze
+  private_constant :VALUE_MULTIPLIER
 
   def initialize(*ingredients)
     @ingredients = ingredients
@@ -43,13 +44,13 @@ class DishGenerator
   # All rock-hard dishes have the same attributes, and
   # are not affected by individual ingredient attributes
   def rock_hard_dish
-    { type: 'rock-hard-food', hearts: 0.25, value: 2 }
+    { category: 'rock-hard-food', hearts: 0.25, value: 2 }
   end
 
   # Dubious dishes heal the sum of the ingredients base hearts,
   # with a minimum threshold of 1 heart, and sells for 2 rupees
   def dubious_dish
-    { type: 'dubious-food', hearts: [1.0, base_hearts_sum].max, value: 2 }
+    { category: 'dubious-food', hearts: [1.0, base_hearts_sum].max, value: 2 }
   end
 
   # If there is a critter present, and no monster part
@@ -70,23 +71,22 @@ class DishGenerator
   end
 
   def only_seasonings_that_require_other_ingredients?
-    ingredients.reject do |ingredient|
+    ingredients.all? do |ingredient|
       Ingredient::SEASONINGS_REQUIRING_OTHER_INGREDIENTS.include?(ingredient.name)
-    end.none?
+    end
   end
 
   def successful_dish
     {
-      type: successful_dish_type,
+      category: successful_dish_category,
       hearts: successful_dish_hearts,
-      value: successful_dish_value,
-      effect: successful_dish_effect
-    }
+      value: successful_dish_value
+    }.merge(successful_dish_effect)
   end
 
   # If the dish has a critter ingredient, then it is an elixir.
   # Otherwise, it is food
-  def successful_dish_type
+  def successful_dish_category
     ingredients.any?(&:critter?) ? 'elixir' : 'food'
   end
 
@@ -95,7 +95,7 @@ class DishGenerator
   # could be a 'bonus' heart value. I am only aware of 'Fresh Milk'
   # having this behaviour
   def successful_dish_hearts
-    ((base_hearts_sum * 2) + single_ingredient_heart_bonus).round(2).to_f
+    Float(((base_hearts_sum * 2) + single_ingredient_heart_bonus).round(2))
   end
 
   # The sum of all ingredient values, multiplied by a value
@@ -103,7 +103,7 @@ class DishGenerator
   # remainders, and round up to the nearest multiple of 10
   def successful_dish_value
     decimal_value = value_sum * VALUE_MULTIPLIER[ingredients.length - 1]
-    integer_value = decimal_value.to_i
+    integer_value = Integer(decimal_value)
 
     (integer_value / 10.0).ceil * 10
   end

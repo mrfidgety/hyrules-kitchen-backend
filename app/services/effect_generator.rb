@@ -10,12 +10,11 @@ class EffectGenerator
   end
 
   def generate
-    return unless valid_effect?
+    return {} unless valid_effect?
 
     {
-      name: effect.name,
-      type: effect.outcome,
-      potency: effect_potency,
+      effect: effect,
+      effect_potency: effect_potency,
       duration: effect_duration
     }
   end
@@ -25,7 +24,7 @@ class EffectGenerator
   attr_reader :ingredients
 
   def valid_effect?
-    ingredients.map(&:effect).compact.uniq.length == 1
+    ingredients.map(&:effect_id).compact.uniq.length == 1
   end
 
   def effect
