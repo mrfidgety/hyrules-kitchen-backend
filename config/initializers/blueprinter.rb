@@ -1,8 +1,12 @@
 require 'blueprinter/json_api_transformer'
+require 'blueprinter/dasherize_keys_transformer'
 require 'blueprinter/json_api_association_extractor'
 
 Blueprinter.configure do |config|
-  config.default_transformers = [Blueprinter::JsonApiTransformer]
+  config.default_transformers = [
+    Blueprinter::JsonApiTransformer,
+    Blueprinter::DasherizeKeysTransformer
+  ]
 end
 
 # Modify the default association behaviour to use a custom extractor
