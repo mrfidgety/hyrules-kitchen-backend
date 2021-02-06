@@ -152,7 +152,7 @@ ingredients_dictionary = [
 
 ingredients_dictionary.each do |ingredient_attributes|
   # See if ingredient already exists
-  existing_ingredient = Ingredient.find_by(name: ingredient_attributes[:name])
+  ingredient = Ingredient.find_by(name: ingredient_attributes[:name])
 
   # Add the effect to the ingredient attributes
   if ingredient_attributes[:effect].present?
@@ -161,9 +161,15 @@ ingredients_dictionary.each do |ingredient_attributes|
   end
 
   # Create new ingredient, or update existing ingredient
-  if existing_ingredient.present?
-    existing_ingredient.update(ingredient_attributes)
+  if ingredient.present?
+    ingredient.update(ingredient_attributes)
   else
-    Ingredient.create(ingredient_attributes)
+    ingredient = Ingredient.create(ingredient_attributes)
   end
+
+  # Update the attached image
+  ingredient.image.attach(
+    io: File.open(Rails.root.join("app/assets/images/ingredients/#{ingredient.parameterized_name}.png")),
+    filename: "#{ingredient.parameterized_name}.png"
+  )
 end

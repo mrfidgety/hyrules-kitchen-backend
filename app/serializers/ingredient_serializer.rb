@@ -29,6 +29,16 @@ class IngredientSerializer < Blueprinter::Base
 
   association :effect
 
+  field :image_path do |ingredient, _options|
+    if ingredient.image.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(
+        ingredient.image, only_path: true
+      )\
+    else
+      ''
+    end
+  end
+
   view :basic do
     exclude :effect
   end

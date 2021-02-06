@@ -24,6 +24,7 @@
 class Ingredient < ApplicationRecord
   has_many :recipe_ingredients
   has_many :recipes, through: :recipe_ingredients
+  has_one_attached :image
   belongs_to :effect, optional: true
 
   enum category: {
